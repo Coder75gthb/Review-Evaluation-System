@@ -101,7 +101,7 @@ def predict_single(text: str):
         confidence,
         text_len,
         has_neg,
-        has_pos
+        
     ]])
 
     tfidf_feat = tfidf.transform([text])
