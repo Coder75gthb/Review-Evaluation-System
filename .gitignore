@@ -1,0 +1,6 @@
+models/ 
+__pycache__/ 
+*.pyc 
+.env 
+0.30 
+0.45 
