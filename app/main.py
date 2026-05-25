@@ -50,10 +50,7 @@ def get_insights(review: ReviewInput):
     rating    = result['predicted_rating']
     probs     = result['probabilities']
 
-    prompt = f"""You are a product review analyst.
-
-A customer wrote this review:
-"{review.text}"
+    prompt=f"""A customer wrote this review: "{review.text}"
 
 The AI model predicted:
 - Sentiment: {sentiment}
@@ -62,14 +59,24 @@ The AI model predicted:
 - Neutral probability: {probs['neutral']}%
 - Negative probability: {probs['negative']}%
 
-Based on this specific review text, provide:
-1. POSITIVE_THEMES: 3-5 specific positive aspects mentioned (comma separated, max 3 words each)
-2. NEUTRAL_THEMES: 3-5 specific neutral/mixed aspects mentioned (comma separated, max 3 words each)
-3. NEGATIVE_THEMES: 3-5 specific negative aspects mentioned (comma separated, max 3 words each)
-4. POSITIVE_SUMMARY: One sentence about what customer liked
-5. NEUTRAL_SUMMARY: One sentence about mixed feelings
-6. NEGATIVE_SUMMARY: One sentence about complaints
-7. RECOMMENDATION: One actionable business recommendation sentence
+You are an expert customer sentiment analyst. Your job is to understand
+what a customer TRULY means, not just what they literally say.
+
+Before classifying anything, reason through these questions internally:
+- What is the customer's overall emotional state?
+- What would this customer tell a friend about this product?
+- If you were the product owner, what would concern or please you here?
+- Are there any indirect, implied, or hedged messages hidden in polite language?
+
+Using that reasoning, extract:
+
+1. POSITIVE_THEMES: Aspects the customer is genuinely satisfied with
+2. NEUTRAL_THEMES: Aspects the customer feels indifferent or conflicted about
+3. NEGATIVE_THEMES: Aspects the customer is dissatisfied with, even if expressed politely or indirectly
+4. POSITIVE_SUMMARY: One sentence capturing genuine praise
+5. NEUTRAL_SUMMARY: One sentence capturing mixed feelings
+6. NEGATIVE_SUMMARY: One sentence capturing real concerns, stated OR implied
+7. RECOMMENDATION: One actionable business recommendation
 
 If no aspects exist for a category, write "None identified".
 Respond in exactly this format, nothing else:
@@ -80,6 +87,7 @@ POSITIVE_SUMMARY: sentence here
 NEUTRAL_SUMMARY: sentence here
 NEGATIVE_SUMMARY: sentence here
 RECOMMENDATION: sentence here"""
+
 
     response = groq_client.chat.completions.create(
         model="llama-3.1-8b-instant",
